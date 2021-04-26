@@ -13,7 +13,7 @@ sess = Session()
 
 analysis = Analyse()
 
-st.title('Global Warming and Climate Change Analysis')
+st.title('EDA on Data Analysts Job Listings')
 sidebar = st.sidebar
 
 def viewForm():
@@ -34,6 +34,10 @@ def analyse():
     data = analysis.getCategories()
     st.plotly_chart(plotBar(data.index, data.values))
 
+def analyseSalary():
+    data = analysis.getSalaryEstimates()
+    st.plotly_chart(plotBar(data.index, data.values))
+
 def viewReport():
     reports = sess.query(Report).all()
     titlesList = [ report.title for report in reports ]
@@ -50,10 +54,10 @@ def viewReport():
     st.markdown(markdown)
 
 sidebar.header('Choose Your Option')
-options = [ 'View Database', 'Analyse', 'View Report' ]
+options = [ 'View Database', 'Analyse Salary', 'View Report' ]
 choice = sidebar.selectbox( options = options, label="Choose Action" )
 
 if choice == options[1]:
     viewForm()
 elif choice == options[2]:
-    analyse()
+    analyseSalary()
