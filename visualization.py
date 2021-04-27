@@ -10,6 +10,6 @@ def plot():
 def plotBar(x, y):
     fig = go.Figure()
 
-    fig.add_trace( go.Bar( x = x , y = y ) )
+    fig.add_trace( go.Bar( x = x , y = y.flatten() ) )
 
     return fig

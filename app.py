@@ -38,6 +38,10 @@ def analyseSalary():
     data = analysis.getSalaryEstimates()
     st.plotly_chart(plotBar(data.index, data.values))
 
+def analyseRating():
+    data = analysis.getRatingCount()
+    st.plotly_chart(plotBar(data.index, data.values))
+
 def viewReport():
     reports = sess.query(Report).all()
     titlesList = [ report.title for report in reports ]
@@ -54,10 +58,12 @@ def viewReport():
     st.markdown(markdown)
 
 sidebar.header('Choose Your Option')
-options = [ 'View Database', 'Analyse Salary', 'View Report' ]
+options = [ 'View Database', 'Analyse Salary','Analyse Rating', 'View Report' ]
 choice = sidebar.selectbox( options = options, label="Choose Action" )
 
-if choice == options[1]:
+if choice == options[0]:
     viewForm()
-elif choice == options[2]:
+elif choice == options[1]:
     analyseSalary()
+elif choice == options[2]:
+    analyseRating()
