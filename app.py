@@ -16,6 +16,10 @@ analysis = Analyse()
 st.title('EDA on Data Analysts Job Listings')
 sidebar = st.sidebar
 
+def viewDataset():
+    st.header('Data Used in this Analysis')
+    st.dataframe(analysis.getDataframe())
+
 def viewForm():
 
     st.plotly_chart(plot())
@@ -30,13 +34,48 @@ def viewForm():
         sess.commit()
         st.success('Report Saved')
 
-def analyse():
-    data = analysis.getCategories()
-    st.plotly_chart(plotBar(data.index, data.values))
 
 def analyseSalary():
     data = analysis.getSalaryEstimates()
     st.plotly_chart(plotBar(data.index, data.values))
+
+def analyseCompany():
+    st.header("Popular locations of Data Analytics Jobs")
+    st.image('plotImages/locations_bar.png')
+
+    st.header("Popular states of Data Analytics Jobs")
+    st.image('plotImages/state_bar.png')
+
+    st.header("Popular industry of Data Analytics Jobs")
+    st.image('plotImages/industry_bar.png')
+
+    st.header("Popular Sector of Data Analytics Jobs")
+    st.image('plotImages/sector_bar.png')
+
+    st.header("Section for Data Analytics Jobs")
+    st.image('plotImages/sector_pie.png')
+
+    st.header("Ownership of Data Analytics Jobs")
+    st.image('plotImages/ownership_bar.png')
+
+    st.header("Easy Apply for Data Analytics Jobs")
+    st.image('plotImages/easy_bar.png')
+
+    st.header("Ratings for Data Analytics Jobs")
+    st.image('plotImages/rating_bar.png')
+    
+
+def analyseListingData():
+    st.header('Most Common word in listings')
+    st.image('plotimages/cloud1.png')
+
+    st.header("Title for Data Analytics Jobs")
+    st.image('plotImages/title_bar.png')
+
+    st.header("Languages for Data Analytics Jobs")
+    st.image('plotImages/language_bar.png')
+
+
 
 def analyseRating():
     data = analysis.getRatingCount()
@@ -58,12 +97,14 @@ def viewReport():
     st.markdown(markdown)
 
 sidebar.header('Choose Your Option')
-options = [ 'View Database', 'Analyse Salary','Analyse Rating', 'View Report' ]
+options = [ 'View Dataset', 'Analyse Salary','Analyse Company', 'Analyse Rating', 'View Report' ]
 choice = sidebar.selectbox( options = options, label="Choose Action" )
 
 if choice == options[0]:
-    viewForm()
+    viewDataset()
 elif choice == options[1]:
     analyseSalary()
 elif choice == options[2]:
+    analyseCompany()
+elif choice == options[3]:
     analyseRating()

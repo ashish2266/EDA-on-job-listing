@@ -16,3 +16,6 @@ class Analyse:
 
     def getRatingCount(self):
         return self.df.groupby('Company Name').count().sort_values('Rating', ascending= False)
+
+    def getDataframe(self):
+        return self.df
