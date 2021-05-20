@@ -1,15 +1,14 @@
 import plotly.graph_objects as go
+import plotly.express as px
 
-def plot():
-    fig = go.Figure()
 
-    fig.add_trace( go.Line( x = [i for i in range(10)] , y = [ i*i for i in range(10) ] ) )
-
-    return fig
-
-def plotBar(x, y):
-    fig = go.Figure()
-
-    fig.add_trace( go.Bar( x = x , y = y.flatten() ) )
-
+def plotBar(df, x, y,  title="default title", color_continuous_scale="rainbow", width=1400, height=900):
+    fig = px.bar(df,
+                 x=x,
+                 y=y,
+                 #  color=color,
+                 color_continuous_scale=color_continuous_scale,
+                 title=title,
+                 width=width,
+                 height=height)
     return fig

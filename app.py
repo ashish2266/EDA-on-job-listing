@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import pandas as pd
 from database import Report
-from visualization import plot, plotBar
+from visualization import *
 from AnalyseData import Analyse
 
 engine = create_engine('sqlite:///db.sqlite3')
@@ -16,9 +16,11 @@ analysis = Analyse()
 st.title('EDA on Data Analysts Job Listings')
 sidebar = st.sidebar
 
+
 def viewDataset():
     st.header('Data Used in this Analysis')
     st.dataframe(analysis.getDataframe())
+
 
 def viewForm():
 
@@ -29,7 +31,7 @@ def viewForm():
     btn = st.button("Submit")
 
     if btn:
-        report1 = Report(title = title, desc = desc, data = "")
+        report1 = Report(title=title, desc=desc, data="")
         sess.add(report1)
         sess.commit()
         st.success('Report Saved')
@@ -39,7 +41,16 @@ def analyseSalary():
     data = analysis.getSalaryEstimates()
     st.plotly_chart(plotBar(data.index, data.values))
 
+
 def analyseCompany():
+
+    st.header('Top Companys')
+    n = st.select_slider(
+        options=[5, 10, 50, 100, 200], label='Select No. of Companys')
+
+    st.plotly_chart(plotBar(analysis.getCompanyCount(n),
+                            'Company Name', 'Job Title'))
+
     st.header("Popular locations of Data Analytics Jobs")
     st.image('plotImages/locations_bar.png')
 
@@ -63,7 +74,7 @@ def analyseCompany():
 
     st.header("Ratings for Data Analytics Jobs")
     st.image('plotImages/rating_bar.png')
-    
+
 
 def analyseListingData():
     st.header('Most Common word in listings')
@@ -76,17 +87,20 @@ def analyseListingData():
     st.image('plotImages/language_bar.png')
 
 
-
 def analyseRating():
-    data = analysis.getRatingCount()
-    st.plotly_chart(plotBar(data.index, data.values))
+
+    st.header("")
+    n = st.select_slider(
+    options=[5, 10, 50, 100, 200], label='Select No. of Companys')
+    st.plotly_chart(plotBar(analysis.getRatingAvg(n), 'Company Name', 'Rating', title=""))
+
 
 def viewReport():
     reports = sess.query(Report).all()
-    titlesList = [ report.title for report in reports ]
-    selReport = st.selectbox(options = titlesList, label="Select Report")
-    
-    reportToView = sess.query(Report).filter_by(title = selReport).first()
+    titlesList = [report.title for report in reports]
+    selReport = st.selectbox(options=titlesList, label="Select Report")
+
+    reportToView = sess.query(Report).filter_by(title=selReport).first()
 
     markdown = f"""
         ## {reportToView.title}
@@ -96,9 +110,11 @@ def viewReport():
 
     st.markdown(markdown)
 
+
 sidebar.header('Choose Your Option')
-options = [ 'View Dataset', 'Analyse Salary','Analyse Company', 'Analyse Rating', 'View Report' ]
-choice = sidebar.selectbox( options = options, label="Choose Action" )
+options = ['View Dataset', 'Analyse Salary',
+           'Analyse Company', 'Analyse Rating', 'View Report']
+choice = sidebar.selectbox(options=options, label="Choose Action")
 
 if choice == options[0]:
     viewDataset()
