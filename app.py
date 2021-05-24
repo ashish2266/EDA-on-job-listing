@@ -15,32 +15,46 @@ analysis = Analyse()
 
 st.title('EDA on Data Analysts Job Listings')
 sidebar = st.sidebar
+# st.image('image_path')
 
+st.markdown("# this is a heading")
 
 def viewDataset():
-    st.header('Data Used in this Analysis')
-    st.dataframe(analysis.getDataframe())
+    st.header('Data Used in Project')
+    dataframe = analysis.getDataframe()
 
+    with st.spinner("Loading Data..."):
+        st.dataframe(dataframe)
 
-def viewForm():
+        st.markdown('---')
+        cols = st.beta_columns(4)
+        cols[0].markdown("### No. of Rows :")
+        cols[1].markdown(f"# {dataframe.shape[0]}")
+        cols[2].markdown("### No. of Columns :")
+        cols[3].markdown(f"# {dataframe.shape[1]}")
+        st.markdown('---')
 
-    st.plotly_chart(plot())
+        st.header('Summary')
+        st.dataframe(dataframe.describe())
+        st.markdown('---')
 
-    title = st.text_input("Report Title")
-    desc = st.text_area('Report Description')
-    btn = st.button("Submit")
-
-    if btn:
-        report1 = Report(title=title, desc=desc, data="")
-        sess.add(report1)
-        sess.commit()
-        st.success('Report Saved')
+        types = {'object': 'Categorical',
+                 'int64': 'Numerical', 'float64': 'Numerical'}
+        types = list(map(lambda t: types[str(t)], dataframe.dtypes))
+        st.header('Dataset Columns')
+        for col, t in zip(dataframe.columns, types):
+            st.markdown(f"### {col}")
+            cols = st.beta_columns(4)
+            cols[0].markdown('#### Unique Values :')
+            cols[1].markdown(f"# {dataframe[col].unique().size}")
+            cols[2].markdown('#### Type :')
+            cols[3].markdown(f"## {t}")
 
 
 def analyseSalary():
     data = analysis.getSalaryEstimates()
-    st.plotly_chart(plotBar(data.index, data.values))
-
+    st.plotly_chart(plotBar(data, 'Salary Estimate', 'Job Title'))
+    st.text("description here")
 
 def analyseCompany():
 
@@ -91,29 +105,14 @@ def analyseRating():
 
     st.header("")
     n = st.select_slider(
-    options=[5, 10, 50, 100, 200], label='Select No. of Companys')
-    st.plotly_chart(plotBar(analysis.getRatingAvg(n), 'Company Name', 'Rating', title=""))
-
-
-def viewReport():
-    reports = sess.query(Report).all()
-    titlesList = [report.title for report in reports]
-    selReport = st.selectbox(options=titlesList, label="Select Report")
-
-    reportToView = sess.query(Report).filter_by(title=selReport).first()
-
-    markdown = f"""
-        ## {reportToView.title}
-        ### {reportToView.desc}
-        
-    """
-
-    st.markdown(markdown)
+        options=[5, 10, 50, 100, 200], label='Select No. of Companys')
+    st.plotly_chart(plotBar(analysis.getRatingAvg(
+        n), 'Company Name', 'Rating', title=""))
 
 
 sidebar.header('Choose Your Option')
 options = ['View Dataset', 'Analyse Salary',
-           'Analyse Company', 'Analyse Rating', 'View Report']
+           'Analyse Company', 'Analyse Rating']
 choice = sidebar.selectbox(options=options, label="Choose Action")
 
 if choice == options[0]:

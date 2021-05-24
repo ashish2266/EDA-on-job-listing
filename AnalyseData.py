@@ -40,7 +40,7 @@ class Analyse:
             self.df.Location.str.split(",", expand=True))
 
     def getSalaryEstimates(self):
-        return self.df.groupby('Salary Estimate').count()['Job Title']
+        return self.df.groupby('Salary Estimate', as_index=False).count()
 
     def getRatingAvg(self, n):
         return self.df.groupby('Company Name', as_index=False).median().sort_values('Rating', ascending=False).head(n)
