@@ -52,3 +52,6 @@ class Analyse:
 
     def getCompanyCount(self, n):
         return self.df.groupby('Company Name', as_index=False).count().sort_values('Job Title', ascending=False).head(n)
+
+    def getJobTitle(self, n):
+        return self.df.groupby('Job Title', as_index = False).count().sort_values('Rating', ascending=False).head(n)

@@ -56,6 +56,10 @@ def analyseSalary():
     st.plotly_chart(plotBar(data, 'Salary Estimate', 'Job Title'))
     st.text("description here")
 
+def analyseJobPosition():
+    st.header("Job Designation Analysis")
+    st.plotly_chart(plotBar(analysis.getJobTitle(10), 'Job Title', 'Rating'))
+
 def analyseCompany():
 
     st.header('Top Companys')
@@ -112,7 +116,7 @@ def analyseRating():
 
 sidebar.header('Choose Your Option')
 options = ['View Dataset', 'Analyse Salary',
-           'Analyse Company', 'Analyse Rating']
+           'Analyse Company', 'Analyse Rating', 'Analyse Listing Data', 'Analyse Jobs']
 choice = sidebar.selectbox(options=options, label="Choose Action")
 
 if choice == options[0]:
@@ -123,3 +127,7 @@ elif choice == options[2]:
     analyseCompany()
 elif choice == options[3]:
     analyseRating()
+elif choice == options[4]:
+    analyseListingData()
+elif choice == options[5]:
+    analyseJobPosition()
